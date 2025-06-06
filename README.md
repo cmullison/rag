@@ -20,7 +20,7 @@ Generate a new database and vector index:
 
 ```bash
 $ wrangler d1 create DATABASE
-$ wrangler vectorize:index create VECTOR_INDEX --preset "@cf/baai/bge-base-en-v1.5"
+$ wrangler vectorize create docs-rag-index --preset "@cf/baai/bge-base-en-v1.5"
 ```
 
 Apply the migration to create the `notes` table in D1:

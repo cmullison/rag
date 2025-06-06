@@ -75,12 +75,12 @@ app.get('/', async (c) => {
 	const vectors = embeddings.data[0]
 
 	const vectorQuery = await c.env.VECTOR_INDEX.query(vectors, { topK: 3 });
-	const vecId = vectorQuery.matches[0]?.id
+	const vecIds = vectorQuery.matches.map(vec => vec.id)
 
 	let notes: string[] = []
-	if (vecId) {
-		const query = `SELECT * FROM notes WHERE id = ?`
-		const { results } = await c.env.DATABASE.prepare(query).bind(vecId).all<Note>()
+	if (vecIds.length) {
+		const query = `SELECT * FROM notes WHERE id IN (${vecIds.map(() => '?').join(', ')})`
+		const { results } = await c.env.DATABASE.prepare(query).bind(...vecIds).all<Note>()
 		if (results) notes = results.map(note => note.text)
 	}
 
